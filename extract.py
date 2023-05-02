@@ -2,12 +2,20 @@ import sqlite3
 from datetime import date
 import json
 import sys
+import os
 
 try:
+    # check if db argument is passed in 
+    if (len(sys.argv) < 2):
+        raise ValueError("database name not specified")
     # user command line arguments
     database = sys.argv[1]
     tables = sys.argv[2:]
 
+    # check if database exists
+    if  not os.path.exists(database):
+        raise FileNotFoundError("database not found")
+    
     # Connect to the database
     conn = sqlite3.connect(database)
     cursor = conn.cursor()
@@ -58,5 +66,5 @@ try:
     print(f"No of tables extracted: {len(tables)}")
     print(f'Data extract into: "{output}"')
     
-except sqlite3.Error as e:
+except Exception as e:
     print("Error:", e)
